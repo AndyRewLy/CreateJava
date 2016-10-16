@@ -37,8 +37,13 @@ public class Convert {
          writer.println("   //private variables");
          addAttributes(writer, type, attr);
          writer.println("   //Default Constructor");
-         writer.println("   public " + className + "() {\n");
-         writer.println("   }");
+         writer.print("   public " + className + "(");
+         addParams(writer, type, attr);
+         writer.println(") {");
+         setClassVar(writer, attr);
+         writer.println("   }\n");
+         createSetter(writer, type, attr);
+         createGetter(writer, type, attr);
          writer.println("}");
          writer.close();
       }
@@ -54,5 +59,39 @@ public class Convert {
          writer.println("   private " + type.get(i) + " " + attr.get(i) + ";"); 
       }
       writer.println();
+   }
+
+   public static void addParams(PrintWriter writer, LinkedList type,
+                                    LinkedList attr) {
+      for (int i = 0; i < type.size(); i++) {
+         writer.print(type.get(i) + " " + attr.get(i));
+         if (i != type.size() - 1) {
+            writer.print(", ");
+         } 
+      }
+   }
+   
+   public static void setClassVar(PrintWriter writer, LinkedList attr) {
+      for (int i = 0; i < attr.size(); i++) {
+         writer.println("      this." + attr.get(i) + " = " + attr.get(i) + ";");
+      }
+   }
+
+   public static void createSetter(PrintWriter writer, LinkedList type,
+                                                       LinkedList attr) {
+      for (int i = 0; i < attr.size(); i++) {
+         writer.println("   public void set_" + attr.get(i) + "(" + type.get(i) + " val) {");
+         writer.println("      " + attr.get(i) + " = val;");
+         writer.println("   }\n");
+      }
+   }
+
+   public static void createGetter(PrintWriter writer, LinkedList type,
+                                                       LinkedList attr) {
+      for (int i = 0; i < attr.size(); i++) {
+         writer.println("   public " + type.get(i) + " get_" + attr.get(i) + "() {");
+         writer.println("      return " + attr.get(i) + ";");
+         writer.println("   }\n");
+      }
    }
 }
