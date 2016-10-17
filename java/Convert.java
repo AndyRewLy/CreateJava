@@ -3,14 +3,16 @@ import java.io.*;
 
 public class Convert {
 
+   public static int numAttr = 0;
+   public static LinkedList attr = new LinkedList<String>();
+   public static LinkedList type = new LinkedList<String>();
+   public static String className; 
+  
    public static void main(String[] args) {
         
       Scanner s = new Scanner(System.in); 
-      String className;
-      LinkedList attr = new LinkedList<String>();
-      LinkedList type = new LinkedList<String>();
+      boolean inheriting = false;
 
-      int numAttr = 0;
 
       PrintWriter writer;
 
@@ -18,33 +20,21 @@ public class Convert {
      
       className = s.nextLine();
       
-      System.out.print("Add Attributes(y/n)?");
-      
+      System.out.print("Is this an inheriting class?(y/n) ");
       if (s.next().charAt(0) == 'y') {
-         System.out.println("How many attributes will you add?");
-         numAttr = s.nextInt();
-         System.out.println("-- Follow the form: <type> <attr_name> --");
-         while (numAttr-- != 0) {
-            type.addLast(s.next());
-            attr.addLast(s.next());
-         }
+         inheriting = true;
       }
           
       try {
          writer = new PrintWriter(className + ".java", "UTF-8");
-         writer.println("import java.util.*;\n");
-         writer.println("public class " + className + " {\n");
-         writer.println("   //private variables");
-         addAttributes(writer, type, attr);
-         writer.println("   //Default Constructor");
-         writer.print("   public " + className + "(");
-         addParams(writer, type, attr);
-         writer.println(") {");
-         setClassVar(writer, attr);
-         writer.println("   }\n");
-         createSetter(writer, type, attr);
-         createGetter(writer, type, attr);
-         writer.println("}");
+      
+         if(inheriting) {
+            createInheritingClass(writer, s);
+         }
+         else {
+            createNewClass(writer, s);
+         }
+
          writer.close();
       }
       catch (Exception e) {
@@ -93,5 +83,42 @@ public class Convert {
          writer.println("      return " + attr.get(i) + ";");
          writer.println("   }\n");
       }
+   }
+   
+   public static void createNewClass(PrintWriter writer, Scanner s) {
+
+      System.out.print("Add Attributes(y/n)?");
+      
+      if (s.next().charAt(0) == 'y') {
+         System.out.println("How many attributes will you add?");
+         numAttr = s.nextInt();
+         System.out.println("-- Follow the form: <type> <attr_name> --");
+         while (numAttr-- != 0) {
+            type.addLast(s.next());
+            attr.addLast(s.next());
+         }
+      }
+
+      writer.println("import java.util.*;\n");
+      writer.println("public class " + className + " {\n");
+      writer.println("   //private variables");
+      addAttributes(writer, type, attr);
+      writer.println("   //Default Constructor");
+      writer.print("   public " + className + "(");
+      addParams(writer, type, attr);
+      writer.println(") {");
+      setClassVar(writer, attr);
+      writer.println("   }\n");
+      createSetter(writer, type, attr);
+      createGetter(writer, type, attr);
+      writer.println("}");
+   }
+
+   public static void createInheritingClass(PrintWriter writer, Scanner s) {
+      String inheritName;
+
+      System.out.print("What is the inheriting class name? ");
+      inheritName = s.nextLine();
+
    }
 }
