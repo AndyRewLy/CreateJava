@@ -13,7 +13,6 @@ public class Convert {
       Scanner s = new Scanner(System.in); 
       boolean inheriting = false;
 
-
       PrintWriter writer;
 
       System.out.print("Input class name: ");
@@ -85,8 +84,7 @@ public class Convert {
       }
    }
    
-   public static void createNewClass(PrintWriter writer, Scanner s) {
-
+   public static void checkAttributes(Scanner s) {
       System.out.print("Add Attributes(y/n)?");
       
       if (s.next().charAt(0) == 'y') {
@@ -99,6 +97,9 @@ public class Convert {
          }
       }
 
+   }
+ 
+   public static void createNewClass(PrintWriter writer, Scanner s) {
       writer.println("import java.util.*;\n");
       writer.println("public class " + className + " {\n");
       writer.println("   //private variables");
@@ -119,6 +120,10 @@ public class Convert {
 
       System.out.print("What is the inheriting class name? ");
       inheritName = s.nextLine();
+
+      writer.println("import java.util.*;\n");
+      writer.println("public class " + className + " extends " + inheritName + " {\n");
+      writer.println("   //private variables");
 
    }
 }
